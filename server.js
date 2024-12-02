@@ -206,15 +206,18 @@ const createDeputyShift = async (shiftPayload, processedResult) => {
       data: response.data
     };
   } catch (error) {
-    // Extract error message with fallbacks
+    // Format error message to be more readable
     const errorMessage = error.response?.data?.message || 
                         error.response?.data?.error?.message ||
                         error.response?.data?.error ||
                         `Error ${error.response?.status || 400}`;
     
+    // Create a more structured error message
+    const formattedError = `Error creating shift for ${shiftPayload.strComment}:\n${errorMessage}`;
+    
     return {
       success: false,
-      error: `Deputy API Error:\n\n${errorMessage} \n\n`,
+      error: formattedError,
       details: error.response?.data,
       shiftPayload
     };
@@ -242,7 +245,7 @@ const convertToUnixTimestamp = (dateStr, timeStr) => {
       2000 + parseInt(year),
       months[month.toLowerCase()],
       parseInt(day),
-      hour - 11, // Subtract 11 hours to account for Sydney timezone
+      process.env.IS_PRODUCTION === 'true' ? hour - 11 : hour, // Only apply offset in production
       parseInt(minutes)
     ));
 
