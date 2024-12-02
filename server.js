@@ -237,16 +237,15 @@ const convertToUnixTimestamp = (dateStr, timeStr) => {
     if (period.toLowerCase() === 'pm' && hour !== 12) hour += 12;
     if (period.toLowerCase() === 'am' && hour === 12) hour = 0;
 
-    // Create date directly in local time
-    const date = new Date(
+    // Create date in UTC
+    const date = new Date(Date.UTC(
       2000 + parseInt(year),
       months[month.toLowerCase()],
       parseInt(day),
-      hour,
+      hour - 10, // Subtract 10 hours to account for Sydney timezone
       parseInt(minutes)
-    );
+    ));
 
-    // Convert to Unix timestamp (seconds)
     return Math.floor(date.getTime() / 1000);
   } catch (error) {
     console.error('Error converting timestamp:', error);
