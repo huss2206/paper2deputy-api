@@ -221,7 +221,7 @@ const createDeputyShift = async (shiftPayload, processedResult) => {
   }
 };
 
-// Add this helper function at the top with other helpers
+// Update the convertToUnixTimestamp function
 const convertToUnixTimestamp = (dateStr, timeStr) => {
   try {
     const [day, month, year] = dateStr.split('-');
@@ -237,9 +237,20 @@ const convertToUnixTimestamp = (dateStr, timeStr) => {
     if (period.toLowerCase() === 'pm' && hour !== 12) hour += 12;
     if (period.toLowerCase() === 'am' && hour === 12) hour = 0;
 
-    const date = new Date(2000 + parseInt(year), months[month.toLowerCase()], parseInt(day), hour, parseInt(minutes));
-    return Math.floor(date.getTime() / 1000);
+    // Create date in Sydney timezone
+    const date = new Date(Date.UTC(
+      2000 + parseInt(year),
+      months[month.toLowerCase()],
+      parseInt(day),
+      hour,
+      parseInt(minutes)
+    ));
+
+    // Add timezone offset for Sydney (AEST/AEDT)
+    const sydneyOffset = 10 * 60 * 60; // 10 hours in seconds
+    return Math.floor(date.getTime() / 1000) + sydneyOffset;
   } catch (error) {
+    console.error('Error converting timestamp:', error);
     return null;
   }
 };
