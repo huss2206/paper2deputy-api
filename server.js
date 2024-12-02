@@ -237,18 +237,17 @@ const convertToUnixTimestamp = (dateStr, timeStr) => {
     if (period.toLowerCase() === 'pm' && hour !== 12) hour += 12;
     if (period.toLowerCase() === 'am' && hour === 12) hour = 0;
 
-    // Create date in Sydney timezone
-    const date = new Date(Date.UTC(
+    // Create date directly in local time
+    const date = new Date(
       2000 + parseInt(year),
       months[month.toLowerCase()],
       parseInt(day),
       hour,
       parseInt(minutes)
-    ));
+    );
 
-    // Add timezone offset for Sydney (AEST/AEDT)
-    const sydneyOffset = 10 * 60 * 60; // 10 hours in seconds
-    return Math.floor(date.getTime() / 1000) + sydneyOffset;
+    // Convert to Unix timestamp (seconds)
+    return Math.floor(date.getTime() / 1000);
   } catch (error) {
     console.error('Error converting timestamp:', error);
     return null;
