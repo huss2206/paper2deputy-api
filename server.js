@@ -242,7 +242,7 @@ const convertToUnixTimestamp = (dateStr, timeStr) => {
       2000 + parseInt(year),
       months[month.toLowerCase()],
       parseInt(day),
-      hour - 10, // Subtract 10 hours to account for Sydney timezone
+      hour - 11, // Subtract 11 hours to account for Sydney timezone
       parseInt(minutes)
     ));
 
